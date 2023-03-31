@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "",
   "bin": {
-    "std-cli": "bin/run.js"
+    "stdlib-cli": "bin/run.js"
   },
   "scripts": {},
   "engines": {
