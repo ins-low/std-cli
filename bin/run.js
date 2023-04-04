@@ -8,14 +8,16 @@ const semver = require('semver');
 const requiredVersion = require('../package.json').engines.node
 const leven = require('leven')
 
-function checkNodeVersion (wanted, id) {
-  if (!semver.satisfies(process.version, wanted, { includePrerelease: true })) {
-    console.log(chalk.red(
-      'You are using Node ' + process.version + ', but this version of ' + id +
-      ' requires Node ' + wanted + '.\nPlease upgrade your Node version.'
-    ))
-    process.exit(1)
-  }
+function checkNodeVersion(wanted, id) {
+    if (!semver.satisfies(process.version, wanted, {
+            includePrerelease: true
+        })) {
+        console.log(chalk.red(
+            'You are using Node ' + process.version + ', but this version of ' + id +
+            ' requires Node ' + wanted + '.\nPlease upgrade your Node version.'
+        ))
+        process.exit(1)
+    }
 }
 
 checkNodeVersion(requiredVersion, 'std-cli')
@@ -32,66 +34,75 @@ const program = require('commander')
 const loadCommand = require('../src/loadCommand')
 
 program
-  .version(`std-cli ${require('../package').version}`)
-  .usage('<command> [options]')
+    .version(`std-cli ${require('../package').version}`)
+    .usage('<command> [options]')
 
 program
-  .command('updata-libs <url>')
-  .description('更新 src/bw-libs 文件夾内的文件')
-  .option('--github', '是否在GITHUT上的地址')
-  .allowUnknownOption()
-  .action((plugin, options) => {
-    // if (process.argv.includes('--github')) {
-    //   options.isGitHut = true;
-    // }
-    require('../src/index')(plugin,options, minimist(process.argv.slice(3)))
-  })
+    .command('updata-libs <url>')
+    .description('更新 src/bw-libs 文件夾内的文件')
+    .option('--github', '是否在GITHUT上的地址')
+    .allowUnknownOption()
+    .action((plugin, options) => {
+        // if (process.argv.includes('--github')) {
+        //   options.isGitHut = true;
+        // }
+        require('../src/index')(plugin, options, minimist(process.argv.slice(3)))
+    })
+
 
 program
-  .command('rules <url>')
-  .description('更新 bw-builds 文件夾内的文件,項目構建文件，包括eslint,prettier')
-  .allowUnknownOption()
-  .action((plugin, options) => {
-    // if (process.argv.includes('--github')) {
-    //   options.isGitHut = true;
-    // }
-    require('../src/cli-builds')(plugin,options, minimist(process.argv.slice(3)))
-  })
+    .command('choice <option>')
+    .description('选择项目')
+    .allowUnknownOption()
+    .action((plugin, options) => {
+        // if (process.argv.includes('--github')) {
+        //   options.isGitHut = true;
+        // }
+        require('../src/cli-template/index')(plugin, options, minimist(process.argv.slice(3)))
+    })
 
 program
-  .command('info')
-  .description('print debugging information about your environment')
-  .action((cmd) => {
-    console.log(chalk.bold('\nEnvironment Info:'))
-    require('envinfo').run(
-      {
-        System: ['OS', 'CPU'],
-        Binaries: ['Node', 'Yarn', 'npm'],
-        Browsers: ['Chrome', 'Edge', 'Firefox', 'Safari'],
-        npmPackages: '/**/{typescript,*vue*,@vue/*/}',
-        npmGlobalPackages: ['std-cli']
-      },
-      {
-        showNotFound: true,
-        duplicates: true,
-        fullTree: true
-      }
-    ).then(console.log)
-  })
+    .command('rules <url>')
+    .description('更新 bw-builds 文件夾内的文件,項目構建文件，包括eslint,prettier')
+    .allowUnknownOption()
+    .action((plugin, options) => {
+        // if (process.argv.includes('--github')) {
+        //   options.isGitHut = true;
+        // }
+        require('../src/cli-builds')(plugin, options, minimist(process.argv.slice(3)))
+    })
+
+program
+    .command('info')
+    .description('print debugging information about your environment')
+    .action((cmd) => {
+        console.log(chalk.bold('\nEnvironment Info:'))
+        require('envinfo').run({
+            System: ['OS', 'CPU'],
+            Binaries: ['Node', 'Yarn', 'npm'],
+            Browsers: ['Chrome', 'Edge', 'Firefox', 'Safari'],
+            npmPackages: '/**/{typescript,*vue*,@vue/*/}',
+            npmGlobalPackages: ['std-cli']
+        }, {
+            showNotFound: true,
+            duplicates: true,
+            fullTree: true
+        }).then(console.log)
+    })
 
 // output help information on unknown commands
 program.on('command:*', ([cmd]) => {
-  program.outputHelp()
-  console.log(`  ` + chalk.red(`Unknown command ${chalk.yellow(cmd)}.`))
-  console.log()
-  suggestCommands(cmd)
-  process.exitCode = 1
+    program.outputHelp()
+    console.log(`  ` + chalk.red(`Unknown command ${chalk.yellow(cmd)}.`))
+    console.log()
+    suggestCommands(cmd)
+    process.exitCode = 1
 })
 
 // add some useful info on help
 program.on('--help', () => {
-  console.log()
-  console.log(`  Run ${chalk.cyan(`vue <command> --help`)} for detailed usage of given command.`)
+            console.log()
+            console.log(`  Run ${chalk.cyan(`vue <command> --help`)} for detailed usage of given command.`)
   console.log()
 })
 
@@ -116,7 +127,7 @@ program.commands.forEach(c => c.on('--help', () => console.log()))
 
 program.parse(process.argv)
 
-function suggestCommands (unknownCommand) {
+function suggestCommands(unknownCommand) {
   const availableCommands = program.commands.map(cmd => cmd._name)
 
   let suggestion
