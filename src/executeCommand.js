@@ -1,4 +1,5 @@
-const { chalk, execa } = require('../cli-service/pluginResolution')
+const chalk = require('chalk');
+const execa = require('execa');
 const EventEmitter = require('events')
 const readline = require('readline')
 
