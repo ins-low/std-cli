@@ -1,15 +1,14 @@
-
-const { pickSheet } = require('excel-i18n');
-async function loadI18n() {
+const pickSheet = require('./excel-lib');
+async function loadI18n(outputUrl='./i18n/locale') {
   // 保证多语言部分x和title的x对应，y和key的y对应
   pickSheet({
-    inputPath: "./i18n.xlsx", // process.pwd下路径
-    outputDir: "./locale", // process.pwd下路径
+    inputPath: "./i18n/i18n.xlsx", // process.pwd下路径
+    outputDir: outputUrl, // process.pwd下路径
     extension: ".js",
-    sheetName: "宝箱",
+    sheetName: "i18n",
     keyX: "A", // key列序号
     keyY1: 3, // key列开头行号,从1开始
-    keyY2: 867, // key列结束行号,从1开始
+    keyY2: 3000, // key列结束行号,从1开始
     titleX: ["D", "E","F"], // title 在哪些列
     titleY: 1, // title在哪一行,从1开始
   handleTitle: (position, content) => {
@@ -32,4 +31,5 @@ async function loadI18n() {
     },
   });
 }
-loadI18n()
+
+module.exports = loadI18n;
