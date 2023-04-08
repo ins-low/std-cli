@@ -50,7 +50,27 @@ program
     })
 
 
-//excel-i18n 把excel的i18n信息轉成json文件
+/**
+ * @description excel2i18n 把excel的i18n信息轉成json文件
+ * [outputUrl] 轉換后的輸出目錄
+ * @example stdlib-cli excel2i18n --trans [outputUrl]
+ */
+program
+    .command('excel2i18n [outputUrl]')
+    .description('把excel的i18n信息轉成json文件輸出到[outputUrl]')
+    .option('--init', '是否在GITHUT上的地址')
+    .option('--trans', '是否在GITHUT上的地址')
+    .allowUnknownOption()
+    .action((plugin, options) => {
+        if (process.argv.includes('--init')) {
+          options.init = true;
+        }
+        if (process.argv.includes('--trans')) {
+            options.trans = true;
+          }
+        require('../src/cli-service/excel2i18n/excel2i18n.js')(plugin, options, minimist(process.argv.slice(3)))
+    })
+
 program
     .command('excel2i18n')
     .description('把excel的i18n信息轉成json文件')
