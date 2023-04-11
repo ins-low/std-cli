@@ -72,14 +72,20 @@ program
     })
 
 program
-    .command('choice <option>')
-    .description('选择项目')
+    .command('excel2i18n')
+    .description('把excel的i18n信息轉成json文件')
+    .option('--configUrl', '使用項目的配置')
+    .option('--trans', '轉換excel的數據為json文件')
+    .option('--init', '獲取默認轉換配置文件，以便修改')
     .allowUnknownOption()
     .action((plugin, options) => {
-        // if (process.argv.includes('--github')) {
-        //   options.isGitHut = true;
-        // }
-        require('../src/cli-template/index')(plugin, options, minimist(process.argv.slice(3)))
+        if (process.argv.includes('--init')) {
+            options.init = true;
+        }
+        if (process.argv.includes('--trans')) {
+            options.trans = true;
+        }
+        require('../src/cli-service/excel2i18n/excel2i18n.js')(plugin, options, minimist(process.argv.slice(3)))
     })
 
 //babel-trans
@@ -94,15 +100,16 @@ program
         require('../src/cli-trans/index')(plugin, options, minimist(process.argv.slice(3)))
     })
 
+//添加eslint和prettier 配置
 program
-    .command('rules <url>')
+    .command('build-tools <url>')
     .description('更新 bw-builds 文件夾内的文件,項目構建文件，包括eslint,prettier')
     .allowUnknownOption()
     .action((plugin, options) => {
         // if (process.argv.includes('--github')) {
         //   options.isGitHut = true;
         // }
-        require('../src/cli-builds')(plugin, options, minimist(process.argv.slice(3)))
+        require('../src/cli-builds/eslint')(plugin, options, minimist(process.argv.slice(3)))
     })
 
 program
