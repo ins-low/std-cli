@@ -82,6 +82,18 @@ program
         require('../src/cli-template/index')(plugin, options, minimist(process.argv.slice(3)))
     })
 
+//babel-trans
+program
+    .command('trans')
+    .description('編譯')
+    .allowUnknownOption()
+    .action((plugin, options) => {
+        // if (process.argv.includes('--github')) {
+        //   options.isGitHut = true;
+        // }
+        require('../src/cli-trans/index')(plugin, options, minimist(process.argv.slice(3)))
+    })
+
 program
     .command('rules <url>')
     .description('更新 bw-builds 文件夾内的文件,項目構建文件，包括eslint,prettier')
