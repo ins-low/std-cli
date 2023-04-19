@@ -6,6 +6,7 @@ const nameFunction = require("@babel/helper-function-name").default;
 const fs = require("fs-extra");
 const path = require("path");
 const { log } = require("../cli-share/logger");
+const splitExportDeclaration = require("./export-split").default;
 const t = types;
 // console.log(traverse);
 // console.log(generator);
@@ -13,77 +14,7 @@ const t = types;
 // console.log(types);
 // console.log(parser);
 
-function splitExportDeclaration(exportDeclaration) {
-  if (!exportDeclaration.isExportDeclaration()) {
-    throw new Error("Only export declarations can be splitted.");
-  }
 
-  // build specifiers that point back to this export declaration
-  const isDefault = exportDeclaration.isExportDefaultDeclaration();
-  const declaration = exportDeclaration.get("declaration");
-  const isClassDeclaration = declaration.isClassDeclaration();
-
-  if (isDefault) {
-    const standaloneDeclaration =
-      declaration.isFunctionDeclaration() || isClassDeclaration;
-
-    const scope = declaration.isScope()
-      ? declaration.scope.parent
-      : declaration.scope;
-
-    let id = declaration.node.id;
-    let needBindingRegistration = false;
-
-    if (!id) {
-      needBindingRegistration = true;
-
-      id = scope.generateUidIdentifier("default");
-
-      if (
-        standaloneDeclaration ||
-        declaration.isFunctionExpression() ||
-        declaration.isClassExpression()
-      ) {
-        declaration.node.id = t.cloneNode(id);
-      }
-    }
-
-    const updatedDeclaration = standaloneDeclaration
-      ? declaration
-      : t.variableDeclaration("var", [
-          t.variableDeclarator(t.cloneNode(id), declaration.node),
-        ]);
-
-    const updatedExportDeclaration = t.exportNamedDeclaration(null, [
-      t.exportSpecifier(t.cloneNode(id), t.identifier("default")),
-    ]);
-
-    exportDeclaration.insertAfter(updatedExportDeclaration);
-    exportDeclaration.replaceWith(updatedDeclaration);
-
-    if (needBindingRegistration) {
-      scope.registerDeclaration(exportDeclaration);
-    }
-
-    return exportDeclaration;
-  }
-
-  if (exportDeclaration.get("specifiers").length > 0) {
-    throw new Error("It doesn't make sense to split exported specifiers.");
-  }
-
-  const bindingIdentifiers = declaration.getOuterBindingIdentifiers();
-
-  const specifiers = Object.keys(bindingIdentifiers).map(name => {
-    return t.exportSpecifier(t.identifier(name), t.identifier(name));
-  });
-
-  const aliasDeclar = t.exportNamedDeclaration(null, specifiers);
-
-  exportDeclaration.insertAfter(aliasDeclar);
-  exportDeclaration.replaceWith(declaration.node);
-  return exportDeclaration;
-}
 
 const MAYBE_EXPRESSIONS = {
   ArrayExpression: { fields: ["elements"] },
@@ -212,42 +143,32 @@ async function trans(configUrl, option, configs) {
     }
   };
   const contextName = "__$$context";
+
+  function letDeclaration(ref,node){
+    t.variableDeclaration("let", [
+      t.variableDeclarator(ref, t.toExpression(node)),
+    ]);
+  }
+
+  function class2object(path){
+    const {node} = path;
+    t.ObjectProperty(t.variableDeclarator(node.id,t.toExpression (node)) )
+  }
+
   traverse(ast, {
-    // enter(path) {
-    //   const { node } = path;
-    //   const expressionFields = MAYBE_EXPRESSIONS[node.type]?MAYBE_EXPRESSIONS[node.type].fields:[];
 
-    //   // console.log(types.classExpression);
-    //   if (expressionFields) {
-    //     console.log(expressionFields)
-    //     // expressionFields.forEach((fieldName) => {
-    //     //   const fieldValue = node[fieldName];
-    //     //   if (typeof fieldValue === 'object') {
-    //     //     if (Array.isArray(fieldValue)) {
-    //     //       fieldValue.forEach((item) => {
-    //     //         addIdentifierIfNeeded(item);
-    //     //       });
-    //     //     } else {
-    //     //       addIdentifierIfNeeded(fieldValue);
-    //     //     }
-    //     //   }
-    //     // });
-    //   }
-
-    // },
     ExportDefaultDeclaration(path) {
       splitExportDeclaration(path);
     },
     ClassExpression(path) {
-      const { node } = path;
+      // const { node } = path;
 
       // const ref = node.id || path.scope.generateUidIdentifier("class");
-      // console.log(node.name);
-      // console.log(node);
-      // console.log(t.FunctionDeclaration);
+      // console.log(node.id);
+      // console.log(t.identifier(node.id.name));
       // // console.log(path);
-      // let methods = t.FunctionDeclaration(t.identifier(node.name));
-      // console.log(path);
+      // let methods = t.FunctionDeclaration(t.identifier(node.id.name));
+      // console.log(methods);
       // const inferred = nameFunction(path);
       // console.log(inferred)
       // if (inferred && inferred !== node) {
@@ -259,16 +180,20 @@ async function trans(configUrl, option, configs) {
         const { node } = path;
 
         const ref = node.id || path.scope.generateUidIdentifier("class");
-
+        // if(node.id){
+        //   console.log(node.id);
+        //   let func = t.identifier(node.id.name);
+        //   console.log(func);
+        //   let methods = t.FunctionDeclaration(ref,[func]);
+        //   console.log(methods);
+        // }
         path.replaceWith(
-          t.variableDeclaration("let", [
-            t.variableDeclarator(ref, t.toExpression(node)),
-          ]),
+          class2object(path)
         );
       },
     ThisExpression(path) {
       // console.log(path)
-      path.replaceWith(types.identifier(contextName));
+      // path.replaceWith(types.identifier(contextName));
     },
   });
 
