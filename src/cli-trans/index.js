@@ -187,9 +187,17 @@ async function trans(configUrl, option, configs) {
         //   let methods = t.FunctionDeclaration(ref,[func]);
         //   console.log(methods);
         // }
-        path.replaceWith(
-          class2object(path)
-        );
+        // path.replaceWith(
+        //   class2object(path)
+        // );
+        let obj = '';
+        path.node.body.forEach(item=>{
+
+        })
+          if (node.declare) {
+            path.remove();
+            return;
+          }
       },
     ThisExpression(path) {
       // console.log(path)
