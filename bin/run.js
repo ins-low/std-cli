@@ -71,22 +71,6 @@ program
         require('../src/cli-service/excel2i18n/excel2i18n.js')(plugin, options, minimist(process.argv.slice(3)))
     })
 
-program
-    .command('excel2i18n')
-    .description('把excel的i18n信息轉成json文件')
-    .option('--configUrl', '使用項目的配置')
-    .option('--trans', '轉換excel的數據為json文件')
-    .option('--init', '獲取默認轉換配置文件，以便修改')
-    .allowUnknownOption()
-    .action((plugin, options) => {
-        if (process.argv.includes('--init')) {
-            options.init = true;
-        }
-        if (process.argv.includes('--trans')) {
-            options.trans = true;
-        }
-        require('../src/cli-service/excel2i18n/excel2i18n.js')(plugin, options, minimist(process.argv.slice(3)))
-    })
 
 //babel-trans
 program
@@ -98,6 +82,18 @@ program
         //   options.isGitHut = true;
         // }
         require('../src/cli-trans/index')(plugin, options, minimist(process.argv.slice(3)))
+    })
+
+//babel-ttf2woff
+program
+    .command('ttf2woff <source> <target>')
+    .description('把ttf文件轉換為woff文件 tar foo')
+    .allowUnknownOption()
+    .action((plugin, options) => {
+        // if (process.argv.includes('--github')) {
+        //   options.isGitHut = true;
+        // }
+        require('../src/cli-service/ttf2woff/ttf2woff.js')(plugin, options, minimist(process.argv.slice(3)))
     })
 
 //添加eslint和prettier 配置

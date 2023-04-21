@@ -180,6 +180,7 @@ async function trans(configUrl, option, configs) {
         const { node } = path;
 
         const ref = node.id || path.scope.generateUidIdentifier("class");
+        log(t.isClassDeclaration(node));
         // if(node.id){
         //   console.log(node.id);
         //   let func = t.identifier(node.id.name);
