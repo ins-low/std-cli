@@ -180,7 +180,8 @@ async function trans(configUrl, option, configs) {
         const { node } = path;
 
         const ref = node.id || path.scope.generateUidIdentifier("class");
-        log(t.isClassDeclaration(node));
+        //是否為class定義的
+        const isClass = t.isClassDeclaration(node);
         // if(node.id){
         //   console.log(node.id);
         //   let func = t.identifier(node.id.name);
@@ -191,14 +192,32 @@ async function trans(configUrl, option, configs) {
         // path.replaceWith(
         //   class2object(path)
         // );
-        let obj = '';
-        path.node.body.forEach(item=>{
-
-        })
-          if (node.declare) {
-            path.remove();
-            return;
+        console.log(t.ObjectDeclaration)
+        Object.keys(t).forEach(key=>{
+          if(key.toLowerCase().indexOf('object')!==-1){
+            console.log('keyName',key);
           }
+        })
+        // console.log(obj);
+        let classPros = path.node.body.body;
+        let res = [];
+        // console.log('testfor',classPros,classPros.length)
+        classPros.forEach((item,index)=>{
+          console.log('classProItem',index,item,item.propertys);
+          if(item.key.name){
+            res.push(
+              t.ObjectProperty(t.Identifier(item.key.name), item.propertys)
+            )
+            }
+        });
+        // console.log(classPros[0])
+        path.replaceWith(
+          t.objectExpression(res)
+        )
+          // if (node.declare) {
+          //   path.remove();
+          //   return;
+          // }
       },
     ThisExpression(path) {
       // console.log(path)
