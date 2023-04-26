@@ -1,4 +1,8 @@
 const webpack = require('webpack');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
+const CopyWebpackPlugin = require('copy-webpack-plugin');
+const VueLoaderPlugin = require('vue-loader/dist/plugin').default;
+console.log(VueLoaderPlugin)
 const path = require("path");
 module.exports = {
   entry: {
@@ -14,7 +18,7 @@ module.exports = {
   devServer: {
     port: '10086',
     hot: true,
-    open:true,
+    // open:true,
   },
   module: {
     rules: [
@@ -22,6 +26,32 @@ module.exports = {
         test: /\.vue$/,
         loader: "vue-loader",
       },
+      {
+        test: /\.js$/,
+        exclude: /(node_modules)/,
+        loader: "babel-loader",
+      },
     ],
   },
+  plugins: [
+    new webpack.ProgressPlugin(),
+
+    new VueLoaderPlugin(),
+    new HtmlWebpackPlugin({
+      title: 'index page',
+      template: './src/docs/public/index.html',
+      // publicPath: '../',
+    }),
+    new CopyWebpackPlugin({
+      patterns: [
+        {
+          //不需要打包的静态资源
+          from: './src/docs/public',
+          to: './src/docs/dist',
+          // toType: 'dir',
+          // ignore: publicCopyIgnore
+        },
+      ],
+    }),
+  ]
 }

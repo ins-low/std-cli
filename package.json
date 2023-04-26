@@ -6,7 +6,8 @@
     "stdlib-cli": "bin/run.js"
   },
   "scripts": {
-    "dev":"node ./src/docs/builds/run-dev.js"
+    "dev": "node ./src/docs/builds/run-dev.js",
+    "build": "node ./src/docs/builds/run.js"
   },
   "engines": {
     "node": ">=14.16"
@@ -50,10 +51,15 @@
     "semver": "^7.3.8",
     "slash": "^3.0.0",
     "strip-ansi": "^6.0.0",
+    "vue": "^3.2.47",
     "vue-template-compiler": "^2.7.14",
     "xlsx": "^0.18.5"
   },
   "devDependencies": {
+    "@vue/compiler-sfc": "^3.2.47",
+    "babel-loader": "^9.1.2",
+    "copy-webpack-plugin": "^11.0.0",
+    "html-webpack-plugin": "^5.5.1",
     "vue-loader": "^17.1.0",
     "webpack": "^5.80.0",
     "webpack-dev-server": "^4.13.3"

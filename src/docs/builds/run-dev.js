@@ -5,7 +5,7 @@ const webpackConfig = require("./webpack.config");
 const server = new webpackDevServer(webpackConfig.devServer, webpack(webpackConfig));
 
   server.start().then(resolve => {
-    console.log(resolve)
+    console.log('server.start',resolve)
   }).catch(err => {
     console.log('err.start:',err);
   });
