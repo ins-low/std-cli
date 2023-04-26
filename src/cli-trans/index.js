@@ -7,14 +7,8 @@ const fs = require("fs-extra");
 const path = require("path");
 const { log } = require("../cli-share/logger");
 const splitExportDeclaration = require("./export-split").default;
+const class2object = require("./class-2-object").default;
 const t = types;
-// console.log(traverse);
-// console.log(generator);
-// console.log(parser);
-// console.log(types);
-// console.log(parser);
-
-
 
 const MAYBE_EXPRESSIONS = {
   ArrayExpression: { fields: ["elements"] },
@@ -150,82 +144,26 @@ async function trans(configUrl, option, configs) {
     ]);
   }
 
-  function class2object(path){
-    const {node} = path;
-    t.ObjectProperty(t.variableDeclarator(node.id,t.toExpression (node)) )
-  }
-
   traverse(ast, {
 
     ExportDefaultDeclaration(path) {
-      splitExportDeclaration(path);
+      splitExportDeclaration(path)
     },
     ClassExpression(path) {
-      // const { node } = path;
-
-      // const ref = node.id || path.scope.generateUidIdentifier("class");
-      // console.log(node.id);
-      // console.log(t.identifier(node.id.name));
-      // // console.log(path);
-      // let methods = t.FunctionDeclaration(t.identifier(node.id.name));
-      // console.log(methods);
-      // const inferred = nameFunction(path);
-      // console.log(inferred)
-      // if (inferred && inferred !== node) {
-      //   path.replaceWith(inferred);
-      //   return;
-      // }
     },
     ClassDeclaration(path) {
-        const { node } = path;
-
-        const ref = node.id || path.scope.generateUidIdentifier("class");
-        //是否為class定義的
-        const isClass = t.isClassDeclaration(node);
-        // if(node.id){
-        //   console.log(node.id);
-        //   let func = t.identifier(node.id.name);
-        //   console.log(func);
-        //   let methods = t.FunctionDeclaration(ref,[func]);
-        //   console.log(methods);
-        // }
-        // path.replaceWith(
-        //   class2object(path)
-        // );
-        console.log(t.ObjectDeclaration)
-        Object.keys(t).forEach(key=>{
-          if(key.toLowerCase().indexOf('object')!==-1){
-            console.log('keyName',key);
-          }
-        })
-        // console.log(obj);
-        let classPros = path.node.body.body;
-        let res = [];
-        // console.log('testfor',classPros,classPros.length)
-        classPros.forEach((item,index)=>{
-          console.log('classProItem',index,item,item.propertys);
-          if(item.key.name){
-            res.push(
-              t.ObjectProperty(t.Identifier(item.key.name), item.propertys)
-            )
-            }
-        });
-        // console.log(classPros[0])
-        path.replaceWith(
-          t.objectExpression(res)
-        )
-          // if (node.declare) {
-          //   path.remove();
-          //   return;
-          // }
-      },
+      class2object(path);
+    },
     ThisExpression(path) {
-      // console.log(path)
-      // path.replaceWith(types.identifier(contextName));
     },
   });
-
   log(generate(ast).code);
+  // try {
+  //   let res = await fs.writeFile(fileUrl, generate(ast).code, { encoding: 'utf-8' });
+  //   console.log('res', res);
+  // } catch (e) {
+  //   console.log('write.error', e);
+  // }
 }
 
 module.exports = (...args) => {

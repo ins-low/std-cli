@@ -70,7 +70,22 @@ program
           }
         require('../src/cli-service/excel2i18n/excel2i18n.js')(plugin, options, minimist(process.argv.slice(3)))
     })
-
+//babel-change-template
+program
+    .command('change-template')
+    .description('修改方法$t')
+    .allowUnknownOption()
+    .action((plugin, options) => {
+        require('../src/cli-share/change-template/index')(plugin, options, minimist(process.argv.slice(3)))
+    })
+//babel-i18n
+program
+    .command('i18n')
+    .description('添加方法到$t')
+    .allowUnknownOption()
+    .action((plugin, options) => {
+        require('../src/cli-share/i18n/index')(plugin, options, minimist(process.argv.slice(3)))
+    })
 
 //babel-trans
 program

@@ -5,7 +5,9 @@
   "bin": {
     "stdlib-cli": "bin/run.js"
   },
-  "scripts": {},
+  "scripts": {
+    "dev":"node ./src/docs/builds/run-dev.js"
+  },
   "engines": {
     "node": ">=14.16"
   },
@@ -18,6 +20,7 @@
     "@babel/runtime": "^7.12.5",
     "@babel/traverse": "^7.12.12",
     "@babel/types": "^7.12.12",
+    "@vue/component-compiler-utils": "^3.3.0",
     "chalk": "^4.1.2",
     "colors": "^1.4.0",
     "commander": "^10.0.0",
@@ -29,21 +32,30 @@
     "events": "^3.3.0",
     "execa": "^1.0.0",
     "fs-extra": "^11.1.1",
+    "hash-sum": "^2.0.0",
     "import-global": "^0.1.0",
     "inquirer": "^8.0.0",
     "isbinaryfile": "^5.0.0",
     "leven": "^3.1.0",
+    "loader-utils": "^3.2.1",
     "lodash.clonedeep": "^4.5.0",
     "minimist": "^1.2.8",
     "node-fetch": "^3.3.1",
     "ora": "^5.3.0",
     "pako": "^2.1.0",
     "pkg-dir": "^5.0.0",
+    "querystring": "^0.2.1",
     "readline": "^1.3.0",
     "resolve": "^1.22.1",
     "semver": "^7.3.8",
     "slash": "^3.0.0",
     "strip-ansi": "^6.0.0",
+    "vue-template-compiler": "^2.7.14",
     "xlsx": "^0.18.5"
+  },
+  "devDependencies": {
+    "vue-loader": "^17.1.0",
+    "webpack": "^5.80.0",
+    "webpack-dev-server": "^4.13.3"
   }
 }
