@@ -1,6 +1,7 @@
 <template>
   <div>
     <h3>{{$t('title.info')}}</h3>
+    <h4>{{title}}</h4>
     <test-info>
       <div>{{$t('test.info')}}</div>
     </test-info>
