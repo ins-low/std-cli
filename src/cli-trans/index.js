@@ -143,7 +143,7 @@ async function trans(configUrl, option, configs) {
       t.variableDeclarator(ref, t.toExpression(node)),
     ]);
   }
-
+  console.log('ast/n', ast);
   traverse(ast, {
 
     ExportDefaultDeclaration(path) {

@@ -2,7 +2,6 @@ const types = require("@babel/types");
 const t = types;
 exports.default = function class2object(path) {
   const declaration = path.get("declaration");
-  const isClassDeclaration = declaration.isClassDeclaration();
 
   const scope = declaration.isScope()
       ? declaration.scope.parent
