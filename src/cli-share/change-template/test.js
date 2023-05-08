@@ -1,21 +1,20 @@
-export default class Viewer{
-  name = '';
-  id = '';
-  props = {
-    te: {
-      default:true
-    }
-  }
-  data() { 
+export default {
+  data(){
     return {
-      name: '12321',
-      info:'info'
+      title:this.$t('test')
     }
-  }
-  show() { 
-    console.log('show Viewer');
-  }
-  render() { 
-    return ''
-  }
+  },
+  methods: {
+    showInfo(){
+      let info = this.$t('llllew');
+      run(info);
+      return this.$t('kkkk')
+    },
+    testGo(){
+      let data = {
+        info: this.$t('data.info')
+      }
+      this.$t('2123123')
+    }
+  },
 }
