@@ -78,13 +78,26 @@ program
     .action((plugin, options) => {
         require('../src/cli-share/change-template/index')(plugin, options, minimist(process.argv.slice(3)))
     })
-//babel-i18n
+//i18n
 program
     .command('i18n')
     .description('添加方法到$t')
     .allowUnknownOption()
     .action((plugin, options) => {
         require('../src/cli-share/i18n/index')(plugin, options, minimist(process.argv.slice(3)))
+    })
+
+/**
+ * @description 
+ * 1.獲取目標（source） 目錄下的所有 .vue 文件
+ * 2.把template中的 $('xxxxx') 按頁面規則生成 提取 到 目標目錄(target)
+ */
+program
+    .command('trans-i18n [source] [target]')
+    .description('添加方法到$t')
+    .allowUnknownOption()
+    .action((plugin, options) => {
+        require('../src/cli-share/change-i18n/index')(plugin, options, minimist(process.argv.slice(3)))
     })
 
 //babel-trans
